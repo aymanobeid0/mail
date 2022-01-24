@@ -30,6 +30,8 @@ function compose_email() {
   document.querySelector("#compose-body").value = "";
 }
 
+function load_mail(id) {}
+
 function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector("#emails-view").style.display = "block";
@@ -46,14 +48,21 @@ function load_mailbox(mailbox) {
       emails.forEach((element) => {
         console.log(element.body);
         div = document.createElement("div");
-        div.innerHTML = ` <div class="row">
+        if (element.read == true) {
+          div.innerHTML = ` <div class="row justify-content-between bg-secondary text-white border border-secondary mb-2 p-3">
         <div> ${element.sender}</div>
         <div> ${element.subject}</div>
         <div> ${element.timestamp}</div>
     </div>`;
-        div.addEventListener("click", function () {
-          console.log("This element has been clicked!");
-        });
+        } else {
+          div.innerHTML = ` <div class="row justify-content-between border border-secondary mb-2 p-3">
+        <div> ${element.sender}</div>
+        <div> ${element.subject}</div>
+        <div> ${element.timestamp}</div>
+    </div>`;
+        }
+
+        div.addEventListener("click", load_mail());
 
         document.querySelector("#emails-view").append(div);
       });
