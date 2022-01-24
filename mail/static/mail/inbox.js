@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function compose_email() {
   // Show compose view and hide other views
   document.querySelector("#emails-view").style.display = "none";
+  document.querySelector("#email-view").style.display = "none";
   document.querySelector("#compose-view").style.display = "block";
 
   // Clear out composition fields
@@ -46,8 +47,8 @@ function load_mailbox(mailbox) {
         console.log(element.body);
         div = document.createElement("div");
         div.innerHTML = ` <div class="row">
-        <div> ${element.recipients}</div>
         <div> ${element.sender}</div>
+        <div> ${element.subject}</div>
         <div> ${element.timestamp}</div>
     </div>`;
         div.addEventListener("click", function () {
