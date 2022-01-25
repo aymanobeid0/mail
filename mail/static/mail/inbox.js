@@ -30,7 +30,9 @@ function compose_email() {
   document.querySelector("#compose-body").value = "";
 }
 
-function load_mail(id) {}
+function load_mail() {
+  console.log("clicked");
+}
 
 function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
@@ -62,7 +64,7 @@ function load_mailbox(mailbox) {
     </div>`;
         }
 
-        div.addEventListener("click", load_mail());
+        div.addEventListener("click", () => load_mail());
 
         document.querySelector("#emails-view").append(div);
       });
