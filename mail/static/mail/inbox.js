@@ -30,13 +30,59 @@ function compose_email() {
   document.querySelector("#compose-body").value = "";
 }
 
-function load_mail() {
-  console.log("clicked");
+function load_mail(id) {
+  fetch(`/emails/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      read: true,
+    }),
+  });
+
+  fetch(`/emails/${id}`)
+    .then((response) => response.json())
+    .then((email) => {
+      document.querySelector("#emails-view").style.display = "none";
+      document.querySelector("#compose-view").style.display = "none";
+      document.querySelector("#email-view").style.display = "block";
+
+      console.log(email.read);
+
+      const view = document.querySelector("#email-view");
+      view.innerHTML = `
+      <div class="row flex-column justify-content-start border">
+        <div class=""><b>From:</b> <span>${email["sender"]}</span></div>
+        <div class=""><b>To: </b><span>${email["recipients"]}</span></div>
+        <div class=""><b>Subject:</b> <span>${email["subject"]}</span</div>
+        <div class=""><b>Time:</b> <span>${email["timestamp"]}</span></div>
+        <div class="m-2">${email["body"]}</div>
+        <button class="btn-primary m-2 reply ">Reply</button>
+        <button class="btn-secondary m-2  archive ">archive</button>
+      </div>
+      
+    `;
+      const reply = document.querySelector(".reply");
+      reply.addEventListener("click", function () {
+        compose_email();
+        document.querySelector("#compose-recipients").value = email.recipients;
+        document.querySelector("#compose-subject").value = email.subject;
+        document.querySelector("#compose-body").value = email.body;
+      });
+      const archive = document.querySelector(".archive");
+      archive.addEventListener("click", function () {
+        fetch(`/emails/${id}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            archived: true,
+          }),
+        }).then((response) => load_mailbox("archive"));
+      });
+    });
 }
 
 function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector("#emails-view").style.display = "block";
+  document.querySelector("#email-view").style.display = "none";
   document.querySelector("#compose-view").style.display = "none";
 
   // Show the mailbox name
@@ -64,7 +110,7 @@ function load_mailbox(mailbox) {
     </div>`;
         }
 
-        div.addEventListener("click", () => load_mail());
+        div.addEventListener("click", () => load_mail(element.id));
 
         document.querySelector("#emails-view").append(div);
       });
